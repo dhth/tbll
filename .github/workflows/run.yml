@@ -24,6 +24,9 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - name: Install
         run: cargo install --quiet --path .
-      - name: Run
+      - name: Run with defaults
         run: |
           for file in examples/*.sh; do bash "$file"; done
+      - name: Run with changed style
+        run: |
+          for file in examples/*.sh; do bash "$file" --style re-structured-text; done

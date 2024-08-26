@@ -1,6 +1,6 @@
 #/usr/bin/env bash
 
-cat <<EOF | tbll \
+cat <<EOF | tbll "$@" \
     -s \
     --headers 'attribute,value'
 event:::COMMIT_PUSHED
