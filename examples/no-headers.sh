@@ -1,6 +1,6 @@
 #/usr/bin/env bash
 
-cat <<EOF | tbll \
+cat <<EOF | tbll "$@" \
     -s \
     -n 3 \
     -r 'col1:::col2:::col3' \

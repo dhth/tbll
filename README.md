@@ -36,14 +36,39 @@ Options:
   -s, --read-stdin                  Whether to read row elements from stdin
   -d, --delimiter <STRING>          Delimiter to use [default: :::]
   -n, --num-cols <NUMBER>           Number of columns to output [default: 1]
-      --headers <STRING,STRING...>  Command separated list of headers
+      --headers <STRING,STRING...>  Command separated list of headers; overrides --num-cols when provided
+      --style <STRING>              Border Style [default: sharp] [possible values: ascii, ascii-rounded, blank, dots, empty, extended, markdown, modern, modern-rounded, psql, re-structured-text, rounded, sharp]
   -h, --help                        Print help
 ```
 
 ### Basic Usage
 
 ```bash
-cat <<EOF | tbll -s -n 3 --headers 'col1,col2,col3' \
+cat << EOF | tbll -s -d ',' --headers 'Movie,Year,Director,Genre'
+The Matrix,1999,Lana Wachowski, Lilly Wachowski,Science Fiction
+Fight Club,1999,David Fincher,Drama
+Pulp Fiction,1994,Quentin Tarantino,Crime
+The Shawshank Redemption,1994,Frank Darabont,Drama
+Jurassic Park,1993,Steven Spielberg,Adventure
+Forrest Gump,1994,Robert Zemeckis,Drama
+EOF
+```
+
+```text
+┌──────────────────────────┬──────┬───────────────────┬─────────────────┐
+│ Movie                    │ Year │ Director          │ Genre           │
+├──────────────────────────┼──────┼───────────────────┼─────────────────┤
+│ The Matrix               │ 1999 │ Lana Wachowski    │ Lilly Wachowski │
+│ Fight Club               │ 1999 │ David Fincher     │ Drama           │
+│ Pulp Fiction             │ 1994 │ Quentin Tarantino │ Crime           │
+│ The Shawshank Redemption │ 1994 │ Frank Darabont    │ Drama           │
+│ Jurassic Park            │ 1993 │ Steven Spielberg  │ Adventure       │
+│ Forrest Gump             │ 1994 │ Robert Zemeckis   │ Drama           │
+└──────────────────────────┴──────┴───────────────────┴─────────────────┘
+```
+
+```bash
+cat <<EOF | tbll -s -d ':::' --headers 'col1,col2,col3' --style psql \
     --row 'r1c1:::r1c2:::r1c3' \
     --row 'r2c1:::r2c2:::r2c3' \
     --row 'r3c1:::r3c2:::r3c3'
@@ -53,19 +78,17 @@ EOF
 ```
 
 ```text
-┌──────┬──────┬──────┐
-│ col1 │ col2 │ col3 │
-├──────┼──────┼──────┤
-│ r1c1 │ r1c2 │ r1c3 │
-│ r2c1 │ r2c2 │ r2c3 │
-│ r3c1 │ r3c2 │ r3c3 │
-│ r4c1 │ r4c2 │ r4c3 │
-│ r5c1 │ r5c2 │ r5c3 │
-└──────┴──────┴──────┘
+ col1 | col2 | col3
+------+------+------
+ r1c1 | r1c2 | r1c3
+ r2c1 | r2c2 | r2c3
+ r3c1 | r3c2 | r3c3
+ r4c1 | r4c2 | r4c3
+ r5c1 | r5c2 | r5c3
 ```
 
 ```bash
-cat <<EOF | tbll -s --headers 'attribute,value'
+cat <<EOF | tbll -s -d ':::' --headers 'attribute,value'
 event:::COMMIT_PUSHED
 system:::tbll
 env:::prod
@@ -122,7 +145,7 @@ want):
 3. If checksum validation goes through, uncompress the archive:
 
    ```shell
-   tar -xzf tbll-x86_64-unknown-linux-gnu.tar.xz.sha256
+   tar -xzf tbll-x86_64-unknown-linux-gnu.tar.xz
    ./tbll
    # profit!
    ```

@@ -1,7 +1,7 @@
 use clap::Parser;
 use std::io::{self, BufRead};
 use std::process;
-use tbll::{get_output, get_row_vec};
+use tbll::{get_output, get_row_vec, TableStyle};
 
 const ROW_DELIMITER: &str = ":::";
 
@@ -26,6 +26,10 @@ struct Args {
     /// Command separated list of headers; overrides --num-cols when provided
     #[arg(long = "headers", value_name = "STRING,STRING...")]
     headers: Option<String>,
+    /// Border Style
+    #[arg(long = "style", value_name = "STRING")]
+    #[clap(value_enum, default_value = "sharp", value_name = "STRING")]
+    style: TableStyle,
 }
 
 fn main() {
@@ -34,6 +38,7 @@ fn main() {
     let mut data: Vec<Vec<String>> = Vec::new();
 
     let mut num_cols = args.num_cols;
+    let style = args.style;
 
     if let Some(headers) = args.headers {
         let headers_vec: Vec<&str> = headers.split(",").collect();
@@ -66,7 +71,7 @@ fn main() {
         }
     }
 
-    let output = get_output(&data);
+    let output = get_output(&data, style);
 
     println!("{output}");
 }
