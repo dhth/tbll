@@ -26,7 +26,7 @@ jobs:
         run: cargo install --quiet --path .
       - name: Run with defaults
         run: |
-          for file in examples/*.sh; do bash "$file"; echo -e "\n---\n"; done
+          for file in examples/*.sh; do bash "$file"; echo -e "\n\n---\n\n"; done
       - name: Run with changed style
         run: |
-          for file in examples/*.sh; do bash "$file" --style psql --left-pad 2 --right-pad 2; echo -e "\n---\n"; done
+          for file in examples/*.sh; do bash "$file" --style psql --left-pad 2 --right-pad 2; echo -e "\n\n---\n\n"; done
