@@ -1,4 +1,4 @@
-The Matrix,1999,Lana Wachowski Lilly Wachowski,Science Fiction
+The Matrix,1999,Lana & Lilly Wachowski,Science Fiction
 Fight Club,1999,David Fincher,Drama
 Pulp Fiction,1994,Quentin Tarantino,Crime
 The Shawshank Redemption,1994,Frank Darabont,Drama

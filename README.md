@@ -49,7 +49,7 @@ Options:
 
 ```bash
 cat << EOF | tbll -s --headers 'Movie,Year,Director,Genre'
-The Matrix,1999,Lana Wachowski, Lilly Wachowski,Science Fiction
+The Matrix,1999,Lana & Lilly Wachowski,Science Fiction
 Fight Club,1999,David Fincher,Drama
 Pulp Fiction,1994,Quentin Tarantino,Crime
 The Shawshank Redemption,1994,Frank Darabont,Drama
@@ -59,16 +59,16 @@ EOF
 ```
 
 ```text
-┌──────────────────────────┬──────┬───────────────────┬─────────────────┐
-│ Movie                    │ Year │ Director          │ Genre           │
-├──────────────────────────┼──────┼───────────────────┼─────────────────┤
-│ The Matrix               │ 1999 │ Lana Wachowski    │ Lilly Wachowski │
-│ Fight Club               │ 1999 │ David Fincher     │ Drama           │
-│ Pulp Fiction             │ 1994 │ Quentin Tarantino │ Crime           │
-│ The Shawshank Redemption │ 1994 │ Frank Darabont    │ Drama           │
-│ Jurassic Park            │ 1993 │ Steven Spielberg  │ Adventure       │
-│ Forrest Gump             │ 1994 │ Robert Zemeckis   │ Drama           │
-└──────────────────────────┴──────┴───────────────────┴─────────────────┘
+┌──────────────────────────┬──────┬────────────────────────┬─────────────────┐
+│ Movie                    │ Year │ Director               │ Genre           │
+├──────────────────────────┼──────┼────────────────────────┼─────────────────┤
+│ The Matrix               │ 1999 │ Lana & Lilly Wachowski │ Science Fiction │
+│ Fight Club               │ 1999 │ David Fincher          │ Drama           │
+│ Pulp Fiction             │ 1994 │ Quentin Tarantino      │ Crime           │
+│ The Shawshank Redemption │ 1994 │ Frank Darabont         │ Drama           │
+│ Jurassic Park            │ 1993 │ Steven Spielberg       │ Adventure       │
+│ Forrest Gump             │ 1994 │ Robert Zemeckis        │ Drama           │
+└──────────────────────────┴──────┴────────────────────────┴─────────────────┘
 ```
 
 ```bash
