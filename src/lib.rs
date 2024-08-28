@@ -1,7 +1,7 @@
 use clap::ValueEnum;
 use tabled::{
     builder::Builder,
-    settings::{Alignment, Style},
+    settings::{Alignment, Padding, Style},
     Table,
 };
 
@@ -9,6 +9,7 @@ pub struct Attribute {
     pub key: String,
     pub value: String,
 }
+
 pub fn get_row_vec(row: &str, delimiter: &str, num_cols: usize) -> Vec<String> {
     let mut items: Vec<&str> = row.split(delimiter).collect();
     if items.len() < num_cols {
@@ -39,6 +40,16 @@ pub enum TableStyle {
     Sharp,
 }
 
+pub struct TablePadding {
+    pub left: usize,
+    pub right: usize,
+}
+
+pub struct RenderConfig {
+    pub style: TableStyle,
+    pub padding: TablePadding,
+}
+
 impl TableStyle {
     fn apply_to(self, data: &mut Table) -> &mut Table {
         match self {
@@ -59,7 +70,7 @@ impl TableStyle {
     }
 }
 
-pub fn get_output(data: &[Vec<String>], style: TableStyle) -> String {
+pub fn get_output(data: &[Vec<String>], config: RenderConfig) -> String {
     let mut builder = Builder::default();
 
     data.iter().for_each(|d| {
@@ -70,8 +81,14 @@ pub fn get_output(data: &[Vec<String>], style: TableStyle) -> String {
 
     b.with(Alignment::left());
     b.with(Style::sharp());
+    b.with(Padding::new(
+        config.padding.left,
+        config.padding.right,
+        0,
+        0,
+    ));
 
-    style.apply_to(&mut b);
+    config.style.apply_to(&mut b);
 
     b.to_string()
 }
