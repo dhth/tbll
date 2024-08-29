@@ -112,6 +112,10 @@ mod tests {
             .collect::<Vec<Vec<String>>>()
     }
 
+    fn to_string_vec(str_vec: Vec<&str>) -> Vec<String> {
+        str_vec.into_iter().map(|s| s.to_string()).collect()
+    }
+
     #[test]
     fn get_row_vec_works_with_defaults() {
         // GIVEN
@@ -121,10 +125,7 @@ mod tests {
         let got = get_row_vec(row_data, ",", 3);
 
         // THEN
-        let expected = ["row1col1", "row1col2", "row1col3"]
-            .into_iter()
-            .map(|item| item.to_string())
-            .collect::<Vec<String>>();
+        let expected = to_string_vec(vec!["row1col1", "row1col2", "row1col3"]);
 
         assert_eq!(got, expected);
     }
@@ -138,10 +139,7 @@ mod tests {
         let got = get_row_vec(row_data, "|", 3);
 
         // THEN
-        let expected = ["row1col1", "row1col2", "row1col3"]
-            .into_iter()
-            .map(|item| item.to_string())
-            .collect::<Vec<String>>();
+        let expected = to_string_vec(vec!["row1col1", "row1col2", "row1col3"]);
 
         assert_eq!(got, expected);
     }
@@ -155,10 +153,7 @@ mod tests {
         let got = get_row_vec(row_data, ",", 3);
 
         // THEN
-        let expected = ["row1col1", "row1col2", "row1col3"]
-            .into_iter()
-            .map(|item| item.to_string())
-            .collect::<Vec<String>>();
+        let expected = to_string_vec(vec!["row1col1", "row1col2", "row1col3"]);
 
         assert_eq!(got, expected);
     }
@@ -172,10 +167,7 @@ mod tests {
         let got = get_row_vec(row_data, ",", 2);
 
         // THEN
-        let expected = ["row1col1", "row1col2"]
-            .into_iter()
-            .map(|item| item.to_string())
-            .collect::<Vec<String>>();
+        let expected = to_string_vec(vec!["row1col1", "row1col2"]);
 
         assert_eq!(got, expected);
     }
@@ -189,10 +181,7 @@ mod tests {
         let got = get_row_vec(row_data, ",", 5);
 
         // THEN
-        let expected = ["row1col1", "row1col2", "row1col3", "", ""]
-            .into_iter()
-            .map(|item| item.to_string())
-            .collect::<Vec<String>>();
+        let expected = to_string_vec(vec!["row1col1", "row1col2", "row1col3", "", ""]);
 
         assert_eq!(got, expected);
     }
