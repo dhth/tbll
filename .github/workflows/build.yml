@@ -24,3 +24,24 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - name: Build
         run: cargo build --verbose
+      - name: Test
+        run: cargo test --verbose
+
+  run:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install
+        run: cargo install --quiet --path .
+      - name: Run with defaults
+        run: |
+          for file in examples/*.sh; do bash "$file"; echo ""; done
+      - name: Run with changed style
+        run: |
+          for file in examples/*.sh; do bash "$file" --style psql --left-pad 2 --right-pad 2; echo ""; done
