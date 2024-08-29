@@ -1,9 +1,9 @@
 use clap::Parser;
 use std::io::{self, BufRead};
 use std::process;
-use tbll::{get_output, get_row_vec, TableStyle};
+use tbll::{get_output, get_row_vec, RenderConfig, TablePadding, TableStyle};
 
-const ROW_DELIMITER: &str = ":::";
+const ROW_DELIMITER: &str = ",";
 
 /// tbll outputs data in tabular format
 #[derive(Parser, Debug)]
@@ -30,6 +30,14 @@ struct Args {
     #[arg(long = "style", value_name = "STRING")]
     #[clap(value_enum, default_value = "sharp", value_name = "STRING")]
     style: TableStyle,
+    /// Left padding for cells
+    #[arg(long = "left-pad", value_name = "NUMBER")]
+    #[clap(default_value = "1")]
+    left_pad: usize,
+    /// Right padding for cells
+    #[arg(long = "right-pad", value_name = "NUMBER")]
+    #[clap(default_value = "1")]
+    right_pad: usize,
 }
 
 fn main() {
@@ -71,7 +79,14 @@ fn main() {
         }
     }
 
-    let output = get_output(&data, style);
+    let padding = TablePadding {
+        left: args.left_pad,
+        right: args.right_pad,
+    };
+
+    let config = RenderConfig { style, padding };
+
+    let output = get_output(&data, config);
 
     println!("{output}");
 }

@@ -2,6 +2,7 @@
 
 cat <<EOF | tbll "$@" \
     -s \
+    -d ':::' \
     --headers 'attribute,value'
 event:::COMMIT_PUSHED
 system:::tbll
