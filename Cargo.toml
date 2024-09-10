@@ -7,7 +7,7 @@ description = "tbll outputs data in tabular format"
 homepage = "https://github.com/dhth/tbll"
 
 [dependencies]
-clap = { version = "4.5.16", features = ["derive"] }
+clap = { version = "4.5.17", features = ["derive"] }
 tabled = "0.16.0"
 
 # The profile that 'cargo dist' will build with
