@@ -24,10 +24,6 @@ name = "tbll"
 path = "src/main.rs"
 doc = false
 
-[lib]
-name = "tbll"
-doc = false
-
 # The profile that 'cargo dist' will build with
 [profile.dist]
 inherits = "release"

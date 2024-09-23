@@ -1,7 +1,11 @@
+mod config;
+mod output;
+
 use clap::Parser;
+use config::{RenderConfig, TablePadding, TableStyle};
+use output::{get_output, get_row_vec};
 use std::io::{self, BufRead};
 use std::process;
-use tbll::{get_output, get_row_vec, RenderConfig, TablePadding, TableStyle};
 
 const ROW_DELIMITER: &str = ",";
 
