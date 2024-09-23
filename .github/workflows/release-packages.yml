@@ -1,4 +1,4 @@
-name: release-crates
+name: release-packages
 
 on:
   workflow_call:
@@ -8,7 +8,7 @@ on:
         type: string
 
 jobs:
-  release-crates:
+  release-packages:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
