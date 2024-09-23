@@ -1,5 +1,8 @@
 # tbll
 
+[![Build status](https://github.com/dhth/tbll/workflows/build/badge.svg)](https://github.com/dhth/tbll/actions)
+![Crates.io Version](https://img.shields.io/crates/v/tbll?style=flat-square&link=https%3A%2F%2Fcrates.io%2Fcrates%2Ftbll)
+
 ✨ Overview
 ---
 
