@@ -14,6 +14,11 @@ categories = [
     "command-line-utilities",
     "text-processing"
 ]
+exclude = [
+    ".github",
+    "examples",
+    "docker-compose.yml",
+]
 
 [dependencies]
 clap = { version = "4.5.18", features = ["derive"] }
