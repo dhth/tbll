@@ -1,10 +1,19 @@
 [package]
 name = "tbll"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 repository = "https://github.com/dhth/tbll"
 description = "tbll outputs data in tabular format"
 homepage = "https://github.com/dhth/tbll"
+license-file = "LICENSE"
+keywords = [
+    "cli",
+    "table",
+]
+categories = [
+    "command-line-utilities",
+    "text-processing"
+]
 
 [dependencies]
 clap = { version = "4.5.18", features = ["derive"] }
@@ -18,7 +27,7 @@ lto = "thin"
 # Config for 'cargo dist'
 [workspace.metadata.dist]
 # The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
-cargo-dist-version = "0.21.1"
+cargo-dist-version = "0.22.1"
 # CI backends to support
 ci = "github"
 # The installers to generate for each app

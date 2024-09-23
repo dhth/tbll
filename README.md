@@ -5,6 +5,30 @@
 
 `tbll` outputs data in tabular format.
 
+```bash
+cat << EOF | tbll -s --headers 'Movie,Year,Director,Genre'
+The Matrix,1999,Lana & Lilly Wachowski,Science Fiction
+Fight Club,1999,David Fincher,Drama
+Pulp Fiction,1994,Quentin Tarantino,Crime
+The Shawshank Redemption,1994,Frank Darabont,Drama
+Jurassic Park,1993,Steven Spielberg,Adventure
+Forrest Gump,1994,Robert Zemeckis,Drama
+EOF
+```
+
+```text
+┌──────────────────────────┬──────┬────────────────────────┬─────────────────┐
+│ Movie                    │ Year │ Director               │ Genre           │
+├──────────────────────────┼──────┼────────────────────────┼─────────────────┤
+│ The Matrix               │ 1999 │ Lana & Lilly Wachowski │ Science Fiction │
+│ Fight Club               │ 1999 │ David Fincher          │ Drama           │
+│ Pulp Fiction             │ 1994 │ Quentin Tarantino      │ Crime           │
+│ The Shawshank Redemption │ 1994 │ Frank Darabont         │ Drama           │
+│ Jurassic Park            │ 1993 │ Steven Spielberg       │ Adventure       │
+│ Forrest Gump             │ 1994 │ Robert Zemeckis        │ Drama           │
+└──────────────────────────┴──────┴────────────────────────┴─────────────────┘
+```
+
 💾 Installation
 ---
 
@@ -17,11 +41,13 @@ brew install dhth/tap/tbll
 **cargo**:
 
 ```sh
+cargo install tbll
 cargo install --git https://github.com/dhth/tbll.git
 ```
 
-Or get the binaries directly from a [release][1]. Read more about verifying the
-authenticity of released artifacts [here](#-verifying-release-artifacts).
+Or get the binaries directly from a Github [release][1]. Read more about
+verifying the authenticity of released artifacts
+[here](#-verifying-release-artifacts).
 
 ⚡️ Usage
 ---
@@ -46,30 +72,6 @@ Options:
 ```
 
 ### Basic Usage
-
-```bash
-cat << EOF | tbll -s --headers 'Movie,Year,Director,Genre'
-The Matrix,1999,Lana & Lilly Wachowski,Science Fiction
-Fight Club,1999,David Fincher,Drama
-Pulp Fiction,1994,Quentin Tarantino,Crime
-The Shawshank Redemption,1994,Frank Darabont,Drama
-Jurassic Park,1993,Steven Spielberg,Adventure
-Forrest Gump,1994,Robert Zemeckis,Drama
-EOF
-```
-
-```text
-┌──────────────────────────┬──────┬────────────────────────┬─────────────────┐
-│ Movie                    │ Year │ Director               │ Genre           │
-├──────────────────────────┼──────┼────────────────────────┼─────────────────┤
-│ The Matrix               │ 1999 │ Lana & Lilly Wachowski │ Science Fiction │
-│ Fight Club               │ 1999 │ David Fincher          │ Drama           │
-│ Pulp Fiction             │ 1994 │ Quentin Tarantino      │ Crime           │
-│ The Shawshank Redemption │ 1994 │ Frank Darabont         │ Drama           │
-│ Jurassic Park            │ 1993 │ Steven Spielberg       │ Adventure       │
-│ Forrest Gump             │ 1994 │ Robert Zemeckis        │ Drama           │
-└──────────────────────────┴──────┴────────────────────────┴─────────────────┘
-```
 
 ```bash
 cat <<EOF | tbll -s -d ':::' \
