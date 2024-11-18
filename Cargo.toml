@@ -21,7 +21,7 @@ exclude = [
 ]
 
 [dependencies]
-clap = { version = "4.5.20", features = ["derive"] }
+clap = { version = "4.5.21", features = ["derive"] }
 tabled = "0.16.0"
 
 [[bin]]
