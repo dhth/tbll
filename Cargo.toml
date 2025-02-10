@@ -23,7 +23,7 @@ exclude = [
 [dependencies]
 anyhow = "1.0.95"
 clap = { version = "4.5.27", features = ["derive"] }
-tabled = "0.17.0"
+tabled = "0.18.0"
 
 [dev-dependencies]
 assert_cmd = "2.0.16"
