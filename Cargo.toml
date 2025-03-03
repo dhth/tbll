@@ -21,7 +21,7 @@ exclude = [
 ]
 
 [dependencies]
-anyhow = "1.0.95"
+anyhow = "1.0.97"
 clap = { version = "4.5.27", features = ["derive"] }
 tabled = "0.17.0"
 
