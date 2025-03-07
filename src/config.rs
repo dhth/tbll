@@ -1,5 +1,5 @@
 use clap::ValueEnum;
-use tabled::{settings::Style, Table};
+use tabled::{Table, settings::Style};
 
 #[derive(Debug, ValueEnum, Clone)]
 pub enum TableStyle {

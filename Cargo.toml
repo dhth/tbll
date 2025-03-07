@@ -1,7 +1,7 @@
 [package]
 name = "tbll"
-version = "0.2.3"
-edition = "2021"
+version = "1.0.0"
+edition = "2024"
 repository = "https://github.com/dhth/tbll"
 description = "tbll outputs data in tabular format"
 homepage = "https://github.com/dhth/tbll"
@@ -35,31 +35,11 @@ name = "tbll"
 path = "src/main.rs"
 doc = false
 
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+
 # The profile that 'cargo dist' will build with
 [profile.dist]
 inherits = "release"
 lto = "thin"
-
-# Config for 'cargo dist'
-[workspace.metadata.dist]
-# The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
-cargo-dist-version = "0.22.1"
-# CI backends to support
-ci = "github"
-# The installers to generate for each app
-installers = ["shell", "homebrew"]
-# A GitHub repo to push Homebrew formulas to
-tap = "dhth/homebrew-tap"
-# Target platforms to build apps for (Rust target-triple syntax)
-targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu"]
-# Path that installers should place binaries in
-install-path = "CARGO_HOME"
-# Publish jobs to run in CI
-publish-jobs = ["homebrew"]
-# Custom jobs to run after the "announce" phase
-# https://opensource.axo.dev/cargo-dist/book/reference/config.html#post-announce-jobs
-post-announce-jobs = ["./release-packages"]
-# Whether to install an updater program
-install-updater = false
-# Whether to enable GitHub Attestations
-github-attestations = true
