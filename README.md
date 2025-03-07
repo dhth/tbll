@@ -11,7 +11,8 @@
 `tbll` outputs data in tabular format.
 
 ```bash
-cat << EOF | tbll -s --headers 'Movie,Year,Director,Genre'
+cat << EOF | tbll
+Movie,Year,Director,Genre
 The Matrix,1999,Lana & Lilly Wachowski,Science Fiction
 Fight Club,1999,David Fincher,Drama
 Pulp Fiction,1994,Quentin Tarantino,Crime
@@ -65,30 +66,29 @@ tbll outputs data in tabular format
 Usage: tbll [OPTIONS]
 
 Options:
-  -r, --row <STRING:::STRING...>    Row elements
-  -s, --read-stdin                  Whether to read row elements from stdin
+  -p, --input-path <STRING>         Input file path; tbll will read from stdin if this is not provided
   -d, --delimiter <STRING>          Delimiter to use [default: ,]
-  -n, --num-cols <NUMBER>           Number of columns to output [default: 1]
-      --headers <STRING,STRING...>  Command separated list of headers; overrides --num-cols when provided
-      --style <STRING>              Border Style [default: sharp] [possible values: ascii, ascii-rounded, blank, dots, empty, extended, markdown, modern, modern-rounded, psql, re-structured-text, rounded, sharp]
-      --left-pad <NUMBER>           Left padding for cells [default: 1]
-      --right-pad <NUMBER>          Right padding for cells [default: 1]
+      --headers <STRING,STRING...>  Command separated list of headers
+  -s, --style <STRING>              Border Style [default: sharp] [possible values: ascii, ascii-rounded, blank, dots, empty, extended, markdown, modern, modern-rounded, psql, re-structured-text, rounded, sharp]
+  -l, --left-pad <NUMBER>           Left padding for cells [default: 1]
+  -r, --right-pad <NUMBER>          Right padding for cells [default: 1]
   -h, --help                        Print help
 ```
 
 ### Basic Usage
 
 ```bash
-cat <<EOF | tbll -s -d ':::' \
+cat <<EOF | tbll \
+    --delimiter ':' \
     --headers 'col1,col2,col3' \
     --style psql \
     --left-pad 2 \
-    --right-pad 2 \
-    --row 'r1c1:::r1c2:::r1c3' \
-    --row 'r2c1:::r2c2:::r2c3' \
-    --row 'r3c1:::r3c2:::r3c3'
-r4c1:::r4c2:::r4c3
-r5c1:::r5c2:::r5c3
+    --right-pad 2
+r1c1:r1c2:r1c3
+r2c1:r2c2:r2c3
+r3c1:r3c2:r3c3
+r4c1:r4c2:r4c3
+r5c1:r5c2:r5c3
 EOF
 ```
 
@@ -103,29 +103,30 @@ EOF
 ```
 
 ```bash
-cat <<EOF | tbll -s -d ':::' --headers 'attribute,value'
-event:::COMMIT_PUSHED
-system:::tbll
-env:::prod
-commit:::$(git rev-parse --short HEAD 2>/dev/null)
-message:::$(git log -1 --pretty=format:'%B' 2>/dev/null)
-stat:::$(git diff HEAD~1..HEAD --shortstat 2>/dev/null)
-author:::$(git log -1 --pretty=format:'%ae' 2>/dev/null)
+cat <<EOF | tbll
+attribute,value
+event,COMMIT_PUSHED
+system,tbll
+env,prod
+commit,"$(git rev-parse --short HEAD 2>/dev/null | xargs)"
+message,"$(git log -1 --pretty=format:'%B' 2>/dev/null | xargs)"
+stat,"$(git diff HEAD~1..HEAD --shortstat 2>/dev/null | xargs)"
+author,"$(git log -1 --pretty=format:'%ae' 2>/dev/null | xargs)"
 EOF
 ```
 
 ```text
-┌───────────┬──────────────────────────────────────────────────┐
-│ attribute │ value                                            │
-├───────────┼──────────────────────────────────────────────────┤
-│ event     │ COMMIT_PUSHED                                    │
-│ system    │ tbll                                             │
-│ env       │ prod                                             │
-│ commit    │ fcb1cdc                                          │
-│ message   │ docs: add more examples                          │
-│ stat      │ 2 files changed, 15 insertions(+), 1 deletion(-) │
-│ author    │ 13575379+dhth@users.noreply.github.com           │
-└───────────┴──────────────────────────────────────────────────┘
+┌───────────┬────────────────────────────────────────────────────┐
+│ attribute │ value                                              │
+├───────────┼────────────────────────────────────────────────────┤
+│ event     │ COMMIT_PUSHED                                      │
+│ system    │ tbll                                               │
+│ env       │ prod                                               │
+│ commit    │ dfe3823                                            │
+│ message   │ chore(deps): bump clap from 4.5.27 to 4.5.31 (#19) │
+│ stat      │ 2 files changed, 7 insertions(+), 7 deletions(-)   │
+│ author    │ 49699333+dependabot[bot]@users.noreply.github.com  │
+└───────────┴────────────────────────────────────────────────────┘
 ```
 
 🔐 Verifying release artifacts
