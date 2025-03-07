@@ -1,13 +1,17 @@
 use assert_cmd::Command;
 use pretty_assertions::assert_eq;
 
-// SUCCESSES
+//-------------//
+//  SUCCESSES  //
+//-------------//
+
 #[test]
 fn shows_help() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("--help");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
 
     // THEN
@@ -19,17 +23,17 @@ fn shows_help() {
 #[test]
 fn works_for_input_file() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-n=4");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
+
+    // THEN
     if !output.status.success() {
         let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
         println!("stderr: \n{}", stderr);
     }
-
-    // THEN
     assert!(output.status.success());
     let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
     let expected = r#"
@@ -47,18 +51,18 @@ fn works_for_input_file() {
 #[test]
 fn works_with_custom_delimiter() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/input-3.txt");
     cmd.arg("-d=|");
-    cmd.arg("-n=4");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
+
+    // THEN
     if !output.status.success() {
         let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
         println!("stderr: \n{}", stderr);
     }
-
-    // THEN
     assert!(output.status.success());
     let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
     let expected = r#"
@@ -76,17 +80,17 @@ fn works_with_custom_delimiter() {
 #[test]
 fn works_with_empty_cells() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/input-4.txt");
-    cmd.arg("-n=4");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
+
+    // THEN
     if !output.status.success() {
         let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
         println!("stderr: \n{}", stderr);
     }
-
-    // THEN
     assert!(output.status.success());
     let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
     let expected = r#"
@@ -104,17 +108,18 @@ fn works_with_empty_cells() {
 #[test]
 fn using_headers_works() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/input-2.txt");
     cmd.arg("--headers=Movie,Year,Director,Genre");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
+
+    // THEN
     if !output.status.success() {
         let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
         println!("stderr: \n{}", stderr);
     }
-
-    // THEN
     assert!(output.status.success());
     let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
     let expected = r#"
@@ -130,48 +135,20 @@ fn using_headers_works() {
 }
 
 #[test]
-fn using_num_cols_works() {
-    // GIVEN
-    // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-n=2");
-    let output = cmd.output().expect("running command failed");
-    if !output.status.success() {
-        let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
-        println!("stderr: \n{}", stderr);
-    }
-
-    // THEN
-    assert!(output.status.success());
-    let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-    let expected = r#"
-┌──────────────────────────┬──────┐
-│ Movie                    │ Year │
-├──────────────────────────┼──────┤
-│ The Matrix               │ 1999 │
-│ Pulp Fiction             │ 1994 │
-│ The Shawshank Redemption │ 1994 │
-└──────────────────────────┴──────┘
-"#;
-    assert_eq!(stdout, expected.trim_start());
-}
-
-#[test]
 fn using_custom_style_works() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-n=4");
     cmd.arg("--style=ascii");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
+
+    // THEN
     if !output.status.success() {
         let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
         println!("stderr: \n{}", stderr);
     }
-
-    // THEN
     assert!(output.status.success());
     let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
     let expected = r#"
@@ -191,18 +168,18 @@ fn using_custom_style_works() {
 #[test]
 fn using_left_pad_works() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-n=4");
     cmd.arg("--left-pad=4");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
+
+    // THEN
     if !output.status.success() {
         let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
         println!("stderr: \n{}", stderr);
     }
-
-    // THEN
     assert!(output.status.success());
     let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
     let expected = r#"
@@ -220,18 +197,18 @@ fn using_left_pad_works() {
 #[test]
 fn using_right_pad_works() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-n=4");
     cmd.arg("--right-pad=4");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
+
+    // THEN
     if !output.status.success() {
         let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
         println!("stderr: \n{}", stderr);
     }
-
-    // THEN
     assert!(output.status.success());
     let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
     let expected = r#"
@@ -247,59 +224,46 @@ fn using_right_pad_works() {
 }
 
 #[test]
-fn providing_rows_works() {
+fn reading_input_where_row_item_contains_delimiter_works() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/input-2.txt");
-    cmd.arg("-r=Movie,Year,Director,Genre");
-    cmd.arg("-r=Jurassic Park,1993,Steven Spielberg,Adventure");
-    cmd.arg("-n=4");
+    cmd.arg("-p=tests/data/input-5.txt");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
+
+    // THEN
     if !output.status.success() {
         let stderr = String::from_utf8(output.stderr).expect("invalid utf-8 stderr");
         println!("stderr: \n{}", stderr);
     }
-
-    // THEN
     assert!(output.status.success());
     let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
     let expected = r#"
-┌──────────────────────────┬──────┬────────────────────────┬─────────────────┐
-│ Movie                    │ Year │ Director               │ Genre           │
-├──────────────────────────┼──────┼────────────────────────┼─────────────────┤
-│ Jurassic Park            │ 1993 │ Steven Spielberg       │ Adventure       │
-│ The Matrix               │ 1999 │ Lana & Lilly Wachowski │ Science Fiction │
-│ Pulp Fiction             │ 1994 │ Quentin Tarantino      │ Crime           │
-│ The Shawshank Redemption │ 1994 │ Frank Darabont         │ Drama           │
-└──────────────────────────┴──────┴────────────────────────┴─────────────────┘
+┌────────────────────────────────┬──────┬───────────────────────┬──────────────────┐
+│ Movie                          │ Year │ Director              │ Genre            │
+├────────────────────────────────┼──────┼───────────────────────┼──────────────────┤
+│ The Matrix                     │ 1999 │ Lana, Lilly Wachowski │ Science Fiction  │
+│ Pulp Fiction                   │ 1994 │ Quentin Tarantino     │ Crime            │
+│ The Shawshank Redemption       │ 1994 │ Frank Darabont        │ Drama            │
+│ The Good, the Bad and the Ugly │ 1967 │ Sergio Leone          │ Spagetti Western │
+└────────────────────────────────┴──────┴───────────────────────┴──────────────────┘
 "#;
     assert_eq!(stdout, expected.trim_start());
 }
 
-// FAILURES
-#[test]
-fn fails_if_no_source_is_provided() {
-    // GIVEN
-    // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    let output = cmd.output().expect("running command failed");
-
-    // THEN
-    if output.status.success() {
-        let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{}", stdout);
-    }
-    assert!(!output.status.success());
-}
+//------------//
+//  FAILURES  //
+//------------//
 
 #[test]
 fn fails_if_more_than_one_source_is_provided() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/input-1.txt");
     cmd.arg("-s");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
 
     // THEN
@@ -313,9 +277,10 @@ fn fails_if_more_than_one_source_is_provided() {
 #[test]
 fn fails_if_input_file_is_non_existent() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/nonexistent.txt");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
 
     // THEN
@@ -329,29 +294,13 @@ fn fails_if_input_file_is_non_existent() {
 }
 
 #[test]
-fn fails_if_num_cols_is_not_a_number() {
-    // GIVEN
-    // WHEN
-    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
-    cmd.arg("-p=tests/data/nonexistent.txt");
-    cmd.arg("-n=blah");
-    let output = cmd.output().expect("running command failed");
-
-    // THEN
-    if output.status.success() {
-        let stdout = String::from_utf8(output.stdout).expect("invalid utf-8 stdout");
-        println!("stdout: \n{}", stdout);
-    }
-    assert!(!output.status.success());
-}
-
-#[test]
 fn fails_if_style_is_not_supported() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/nonexistent.txt");
     cmd.arg("--style=blah");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
 
     // THEN
@@ -365,10 +314,11 @@ fn fails_if_style_is_not_supported() {
 #[test]
 fn fails_if_left_pad_is_not_a_number() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/nonexistent.txt");
     cmd.arg("--left-pad=blah");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
 
     // THEN
@@ -382,10 +332,11 @@ fn fails_if_left_pad_is_not_a_number() {
 #[test]
 fn fails_if_right_pad_is_not_a_number() {
     // GIVEN
-    // WHEN
     let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
     cmd.arg("-p=tests/data/nonexistent.txt");
     cmd.arg("--left-pad=blah");
+
+    // WHEN
     let output = cmd.output().expect("running command failed");
 
     // THEN
