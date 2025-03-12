@@ -5,14 +5,38 @@ use tabled::{
     settings::{Alignment, Padding, Style},
 };
 
-pub fn get_output(data: &[StringRecord], config: RenderConfig) -> String {
+pub fn get_output(
+    data: &[StringRecord],
+    config: RenderConfig,
+    cols: Option<&[usize]>,
+) -> Option<String> {
     let mut builder = Builder::default();
 
-    data.iter().for_each(|d| {
-        builder.push_record(d);
-    });
+    match cols {
+        Some(index) => {
+            data.iter().for_each(|record| {
+                let vals = record
+                    .iter()
+                    .enumerate()
+                    .filter(|(i, _)| index.contains(i))
+                    .map(|(_, s)| s)
+                    .collect::<Vec<_>>();
+                if !vals.is_empty() {
+                    builder.push_record(vals);
+                }
+            });
+        }
+        None => {
+            data.iter().for_each(|record| {
+                builder.push_record(record);
+            });
+        }
+    }
 
     let mut b = builder.build();
+    if b.count_rows() == 0 {
+        return None;
+    }
 
     b.with(Alignment::left());
     b.with(Style::sharp());
@@ -25,7 +49,7 @@ pub fn get_output(data: &[StringRecord], config: RenderConfig) -> String {
 
     config.style.apply_to(&mut b);
 
-    b.to_string()
+    Some(b.to_string())
 }
 
 #[cfg(test)]
@@ -60,7 +84,7 @@ mod tests {
         };
 
         // WHEN
-        let got = get_output(&data, config);
+        let got = get_output(&data, config, None).expect("a string should've been returned");
 
         // THEN
         let expected = "
@@ -84,7 +108,7 @@ mod tests {
         };
 
         // WHEN
-        let got = get_output(&data, config);
+        let got = get_output(&data, config, None).expect("a string should've been returned");
 
         // THEN
         let expected = "
@@ -109,7 +133,7 @@ mod tests {
         };
 
         // WHEN
-        let got = get_output(&data, config);
+        let got = get_output(&data, config, None).expect("a string should've been returned");
 
         // THEN
         let expected = "
@@ -121,5 +145,46 @@ mod tests {
 └───────────┴───────────┴───────────┘
 ";
         assert_eq!(got, expected.trim());
+    }
+
+    #[test]
+    fn selects_indices_correctly() {
+        // GIVEN
+        let data = generate_data();
+        let config = RenderConfig {
+            style: TableStyle::Sharp,
+            padding: TablePadding { left: 1, right: 1 },
+        };
+
+        // WHEN
+        let got = get_output(&data, config, Some(vec![0, 2]).as_deref())
+            .expect("a string should've been returned");
+
+        // THEN
+        let expected = "
+┌──────────┬──────────┐
+│ row1col1 │ row1col3 │
+├──────────┼──────────┤
+│ row2col1 │ row2col3 │
+│ row3col1 │ row3col3 │
+└──────────┴──────────┘
+";
+        assert_eq!(got, expected.trim());
+    }
+
+    #[test]
+    fn returns_nothing_if_indices_are_incorrect() {
+        // GIVEN
+        let data = generate_data();
+        let config = RenderConfig {
+            style: TableStyle::Sharp,
+            padding: TablePadding { left: 1, right: 1 },
+        };
+
+        // WHEN
+        let got = get_output(&data, config, Some(vec![5, 8]).as_deref());
+
+        // THEN
+        assert!(got.is_none());
     }
 }
