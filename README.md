@@ -69,6 +69,7 @@ Options:
   -p, --input-path <STRING>         Input file path; tbll will read from stdin if this is not provided
   -d, --delimiter <STRING>          Delimiter to use [default: ,]
       --headers <STRING,STRING...>  Command separated list of headers
+  -c, --cols <NUMBER,NUMBER...>     Indices of columns (starting from zero) to display
   -s, --style <STRING>              Border Style [default: sharp] [possible values: ascii, ascii-rounded, blank, dots, empty, extended, markdown, modern, modern-rounded, psql, re-structured-text, rounded, sharp]
   -l, --left-pad <NUMBER>           Left padding for cells [default: 1]
   -r, --right-pad <NUMBER>          Right padding for cells [default: 1]

@@ -1,6 +1,6 @@
 [package]
 name = "tbll"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2024"
 repository = "https://github.com/dhth/tbll"
 description = "tbll outputs data in tabular format"
