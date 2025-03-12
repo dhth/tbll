@@ -25,6 +25,14 @@ struct Args {
     /// Command separated list of headers
     #[arg(long = "headers", value_name = "STRING,STRING...")]
     headers: Option<String>,
+    /// Indices of columns (starting from zero) to display
+    #[arg(
+        short = 'c',
+        long = "cols",
+        value_name = "NUMBER,NUMBER...",
+        value_delimiter = ','
+    )]
+    cols: Option<Vec<usize>>,
     /// Border Style
     #[arg(short = 's', long = "style", value_name = "STRING")]
     #[clap(value_enum, default_value = "sharp", value_name = "STRING")]
@@ -92,9 +100,9 @@ fn main() -> anyhow::Result<()> {
         padding,
     };
 
-    let output = get_output(&data, config);
-
-    println!("{output}");
+    if let Some(output) = get_output(&data, config, args.cols.as_deref()) {
+        println!("{output}");
+    }
 
     Ok(())
 }
