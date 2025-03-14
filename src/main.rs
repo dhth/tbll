@@ -1,5 +1,6 @@
 mod config;
 mod output;
+mod types;
 
 use anyhow::Context;
 use clap::Parser;
@@ -8,6 +9,7 @@ use csv::StringRecord;
 use output::get_output;
 use std::fs::File;
 use std::io::BufReader;
+use types::Cols;
 
 const ROW_DELIMITER: &str = ",";
 
@@ -33,6 +35,14 @@ struct Args {
         value_delimiter = ','
     )]
     cols: Option<Vec<usize>>,
+    /// Indices of columns (starting from zero) to skip
+    #[arg(
+        short = 'C',
+        long = "skip-cols",
+        value_name = "NUMBER,NUMBER...",
+        value_delimiter = ','
+    )]
+    skip_cols: Option<Vec<usize>>,
     /// Border Style
     #[arg(short = 's', long = "style", value_name = "STRING")]
     #[clap(value_enum, default_value = "sharp", value_name = "STRING")]
@@ -51,6 +61,15 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
     let mut data: Vec<StringRecord> = Vec::new();
+
+    let maybe_cols = match (args.cols, args.skip_cols) {
+        (Some(_), Some(_)) => Err(anyhow::anyhow!(
+            "--cols and --skip-cols cannot be used at the same time"
+        )),
+        (None, None) => Ok(None),
+        (Some(c), None) => Ok(Some(Cols::include(c))),
+        (None, Some(c)) => Ok(Some(Cols::skip(c))),
+    }?;
 
     if let Some(headers) = &args.headers {
         let headers_vec: Vec<&str> = headers.split(",").collect();
@@ -100,7 +119,7 @@ fn main() -> anyhow::Result<()> {
         padding,
     };
 
-    if let Some(output) = get_output(&data, config, args.cols.as_deref()) {
+    if let Some(output) = get_output(&data, config, maybe_cols) {
         println!("{output}");
     }
 
