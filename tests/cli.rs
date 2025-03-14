@@ -224,6 +224,28 @@ fn selecting_specific_columns_works() {
     ));
 }
 
+#[test]
+fn skipping_specific_columns_works() {
+    // GIVEN
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
+    cmd.args(["-p=tests/data/input-1.txt", "-C=1,2"]);
+
+    // WHEN
+    // THEN
+    cmd.assert().success().stdout(contains(
+        r#"
+┌──────────────────────────┬─────────────────┐
+│ Movie                    │ Genre           │
+├──────────────────────────┼─────────────────┤
+│ The Matrix               │ Science Fiction │
+│ Pulp Fiction             │ Crime           │
+│ The Shawshank Redemption │ Drama           │
+└──────────────────────────┴─────────────────┘
+"#
+        .trim(),
+    ));
+}
+
 //------------//
 //  FAILURES  //
 //------------//
@@ -287,4 +309,17 @@ fn fails_if_right_pad_is_not_a_number() {
     // WHEN
     // THEN
     cmd.assert().failure();
+}
+
+#[test]
+fn fails_if_both_cols_and_skip_cols_are_provided() {
+    // GIVEN
+    let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).unwrap();
+    cmd.args(["-p=tests/data/input-1.txt", "-c=0,3", "-C=1,2"]);
+
+    // WHEN
+    // THEN
+    cmd.assert().failure().stderr(contains(
+        "you cannot provide --cols and --skip-cols at the same time",
+    ));
 }

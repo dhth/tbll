@@ -1,4 +1,5 @@
 use crate::config::RenderConfig;
+use crate::types::Cols;
 use csv::StringRecord;
 use tabled::{
     builder::Builder,
@@ -8,23 +9,37 @@ use tabled::{
 pub fn get_output(
     data: &[StringRecord],
     config: RenderConfig,
-    cols: Option<&[usize]>,
+    cols: Option<Cols>,
 ) -> Option<String> {
     let mut builder = Builder::default();
 
     match cols {
-        Some(index) => {
-            data.iter().for_each(|record| {
-                let vals = record
-                    .iter()
-                    .enumerate()
-                    .filter(|(i, _)| index.contains(i))
-                    .map(|(_, s)| s)
-                    .collect::<Vec<_>>();
-                if !vals.is_empty() {
-                    builder.push_record(vals);
-                }
-            });
+        Some(indices) => {
+            if indices.include {
+                data.iter().for_each(|record| {
+                    let vals = record
+                        .iter()
+                        .enumerate()
+                        .filter(|(i, _)| indices.values.contains(i))
+                        .map(|(_, s)| s)
+                        .collect::<Vec<_>>();
+                    if !vals.is_empty() {
+                        builder.push_record(vals);
+                    }
+                });
+            } else {
+                data.iter().for_each(|record| {
+                    let vals = record
+                        .iter()
+                        .enumerate()
+                        .filter(|(i, _)| !indices.values.contains(i))
+                        .map(|(_, s)| s)
+                        .collect::<Vec<_>>();
+                    if !vals.is_empty() {
+                        builder.push_record(vals);
+                    }
+                });
+            }
         }
         None => {
             data.iter().for_each(|record| {
@@ -157,7 +172,7 @@ mod tests {
         };
 
         // WHEN
-        let got = get_output(&data, config, Some(vec![0, 2]).as_deref())
+        let got = get_output(&data, config, Some(Cols::include(vec![0, 2])))
             .expect("a string should've been returned");
 
         // THEN
@@ -173,6 +188,31 @@ mod tests {
     }
 
     #[test]
+    fn skips_indices_correctly() {
+        // GIVEN
+        let data = generate_data();
+        let config = RenderConfig {
+            style: TableStyle::Sharp,
+            padding: TablePadding { left: 1, right: 1 },
+        };
+
+        // WHEN
+        let got = get_output(&data, config, Some(Cols::skip(vec![0, 2])))
+            .expect("a string should've been returned");
+
+        // THEN
+        let expected = "
+┌──────────┐
+│ row1col2 │
+├──────────┤
+│ row2col2 │
+│ row3col2 │
+└──────────┘
+";
+        assert_eq!(got, expected.trim());
+    }
+
+    #[test]
     fn returns_nothing_if_indices_are_incorrect() {
         // GIVEN
         let data = generate_data();
@@ -182,7 +222,7 @@ mod tests {
         };
 
         // WHEN
-        let got = get_output(&data, config, Some(vec![5, 8]).as_deref());
+        let got = get_output(&data, config, Some(Cols::include(vec![5, 8])));
 
         // THEN
         assert!(got.is_none());
