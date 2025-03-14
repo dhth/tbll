@@ -320,6 +320,6 @@ fn fails_if_both_cols_and_skip_cols_are_provided() {
     // WHEN
     // THEN
     cmd.assert().failure().stderr(contains(
-        "you cannot provide --cols and --skip-cols at the same time",
+        "--cols and --skip-cols cannot be used at the same time",
     ));
 }

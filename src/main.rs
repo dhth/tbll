@@ -64,7 +64,7 @@ fn main() -> anyhow::Result<()> {
 
     let maybe_cols = match (args.cols, args.skip_cols) {
         (Some(_), Some(_)) => Err(anyhow::anyhow!(
-            "you cannot provide --cols and --skip-cols at the same time"
+            "--cols and --skip-cols cannot be used at the same time"
         )),
         (None, None) => Ok(None),
         (Some(c), None) => Ok(Some(Cols::include(c))),
