@@ -23,4 +23,3 @@ post-announce-jobs = ["./release-packages"]
 install-updater = false
 # Whether to enable GitHub Attestations
 github-attestations = true
-pr-run-mode = "upload"
