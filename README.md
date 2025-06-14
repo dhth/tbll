@@ -1,6 +1,6 @@
 # tbll
 
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/dhth/tbll/build.yml?style=flat-square)](https://github.com/dhth/tbll/actions)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/dhth/tbll/main.yml?style=flat-square)](https://github.com/dhth/tbll/actions)
 [![Crates.io Version](https://img.shields.io/crates/v/tbll?style=flat-square)](https://crates.io/crates/tbll)
 [![Latest Release](https://img.shields.io/github/release/dhth/tbll.svg?style=flat-square&label=github%20release)](https://github.com/dhth/tbll/releases/latest)
 [![Commits Since Latest Release](https://img.shields.io/github/commits-since/dhth/tbll/latest?style=flat-square)](https://github.com/dhth/tbll/releases)
