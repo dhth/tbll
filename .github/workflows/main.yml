@@ -14,7 +14,8 @@ jobs:
     permissions:
       contents: read
     outputs:
-      rust: ${{ steps.filter.outputs.rust }}
+      code: ${{ steps.filter.outputs.code }}
+      deps: ${{ steps.filter.outputs.deps }}
       workflows: ${{ steps.filter.outputs.workflows }}
       yml: ${{ steps.filter.outputs.yml }}
     steps:
@@ -24,7 +25,7 @@ jobs:
         id: filter
         with:
           filters: |
-            rust:
+            code:
               - "src/**"
               - "tests/**"
               - "**/*.rs"
@@ -34,6 +35,11 @@ jobs:
               - rust-toolchain.toml
               - ".github/actions/**/*.yml"
               - ".github/workflows/main.yml"
+            deps:
+              - "Cargo.toml"
+              - "Cargo.lock"
+              - "deny.toml"
+              - ".github/workflows/main.yml"
             workflows:
               - ".github/**/*.yml"
             yml:
@@ -42,7 +48,7 @@ jobs:
 
   lint:
     needs: changes
-    if: ${{ needs.changes.outputs.rust == 'true' }}
+    if: ${{ needs.changes.outputs.code == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,7 +63,7 @@ jobs:
 
   build:
     needs: changes
-    if: ${{ needs.changes.outputs.rust == 'true' }}
+    if: ${{ needs.changes.outputs.code == 'true' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -71,7 +77,7 @@ jobs:
 
   test:
     needs: changes
-    if: ${{ needs.changes.outputs.rust == 'true' }}
+    if: ${{ needs.changes.outputs.code == 'true' }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -100,3 +106,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: dhth/composite-actions/.github/actions/lint-yaml@main
+
+  audit:
+    needs: changes
+    if: ${{ needs.changes.outputs.deps == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: dhth/composite-actions/.github/actions/cargo-deny@main
