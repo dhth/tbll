@@ -71,6 +71,7 @@ pub fn get_output(
 mod tests {
     use super::*;
     use crate::config::{RenderConfig, TablePadding, TableStyle};
+    use insta::assert_snapshot;
 
     fn generate_data() -> Vec<StringRecord> {
         let data = vec![
@@ -102,15 +103,14 @@ mod tests {
         let got = get_output(&data, config, None).expect("a string should've been returned");
 
         // THEN
-        let expected = "
-┌──────────┬──────────┬──────────┐
-│ row1col1 │ row1col2 │ row1col3 │
-├──────────┼──────────┼──────────┤
-│ row2col1 │ row2col2 │ row2col3 │
-│ row3col1 │ row3col2 │ row3col3 │
-└──────────┴──────────┴──────────┘
-";
-        assert_eq!(got, expected.trim());
+        assert_snapshot!(got, @r"
+        ┌──────────┬──────────┬──────────┐
+        │ row1col1 │ row1col2 │ row1col3 │
+        ├──────────┼──────────┼──────────┤
+        │ row2col1 │ row2col2 │ row2col3 │
+        │ row3col1 │ row3col2 │ row3col3 │
+        └──────────┴──────────┴──────────┘
+        ");
     }
 
     #[test]
@@ -126,16 +126,15 @@ mod tests {
         let got = get_output(&data, config, None).expect("a string should've been returned");
 
         // THEN
-        let expected = "
-+----------+----------+----------+
-| row1col1 | row1col2 | row1col3 |
-+----------+----------+----------+
-| row2col1 | row2col2 | row2col3 |
-+----------+----------+----------+
-| row3col1 | row3col2 | row3col3 |
-+----------+----------+----------+
-";
-        assert_eq!(got, expected.trim());
+        assert_snapshot!(got, @r"
+        +----------+----------+----------+
+        | row1col1 | row1col2 | row1col3 |
+        +----------+----------+----------+
+        | row2col1 | row2col2 | row2col3 |
+        +----------+----------+----------+
+        | row3col1 | row3col2 | row3col3 |
+        +----------+----------+----------+
+        ");
     }
 
     #[test]
@@ -151,15 +150,14 @@ mod tests {
         let got = get_output(&data, config, None).expect("a string should've been returned");
 
         // THEN
-        let expected = "
-┌───────────┬───────────┬───────────┐
-│ row1col1  │ row1col2  │ row1col3  │
-├───────────┼───────────┼───────────┤
-│ row2col1  │ row2col2  │ row2col3  │
-│ row3col1  │ row3col2  │ row3col3  │
-└───────────┴───────────┴───────────┘
-";
-        assert_eq!(got, expected.trim());
+        assert_snapshot!(got, @r"
+        ┌───────────┬───────────┬───────────┐
+        │ row1col1  │ row1col2  │ row1col3  │
+        ├───────────┼───────────┼───────────┤
+        │ row2col1  │ row2col2  │ row2col3  │
+        │ row3col1  │ row3col2  │ row3col3  │
+        └───────────┴───────────┴───────────┘
+        ");
     }
 
     #[test]
@@ -176,15 +174,14 @@ mod tests {
             .expect("a string should've been returned");
 
         // THEN
-        let expected = "
-┌──────────┬──────────┐
-│ row1col1 │ row1col3 │
-├──────────┼──────────┤
-│ row2col1 │ row2col3 │
-│ row3col1 │ row3col3 │
-└──────────┴──────────┘
-";
-        assert_eq!(got, expected.trim());
+        assert_snapshot!(got, @r"
+        ┌──────────┬──────────┐
+        │ row1col1 │ row1col3 │
+        ├──────────┼──────────┤
+        │ row2col1 │ row2col3 │
+        │ row3col1 │ row3col3 │
+        └──────────┴──────────┘
+        ");
     }
 
     #[test]
@@ -201,15 +198,14 @@ mod tests {
             .expect("a string should've been returned");
 
         // THEN
-        let expected = "
-┌──────────┐
-│ row1col2 │
-├──────────┤
-│ row2col2 │
-│ row3col2 │
-└──────────┘
-";
-        assert_eq!(got, expected.trim());
+        assert_snapshot!(got, @r"
+        ┌──────────┐
+        │ row1col2 │
+        ├──────────┤
+        │ row2col2 │
+        │ row3col2 │
+        └──────────┘
+        ");
     }
 
     #[test]
