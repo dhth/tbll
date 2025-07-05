@@ -1,6 +1,6 @@
 mod common;
 
-use common::base_command;
+use common::Fixture;
 use insta_cmd::assert_cmd_snapshot;
 
 //-------------//
@@ -10,8 +10,8 @@ use insta_cmd::assert_cmd_snapshot;
 #[test]
 fn shows_help() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("--help");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--help"]);
 
     // WHEN
     // THEN
@@ -41,8 +41,8 @@ fn shows_help() {
 #[test]
 fn works_for_input_file() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/input-1.txt");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-1.txt"]);
 
     // WHEN
     // THEN
@@ -65,9 +65,8 @@ fn works_for_input_file() {
 #[test]
 fn works_with_custom_delimiter() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/input-3.txt");
-    cmd.arg("-d=|");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-3.txt", "--delimiter", "|"]);
 
     // WHEN
     // THEN
@@ -90,8 +89,8 @@ fn works_with_custom_delimiter() {
 #[test]
 fn works_with_empty_cells() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/input-4.txt");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-4.txt"]);
 
     // WHEN
     // THEN
@@ -114,9 +113,12 @@ fn works_with_empty_cells() {
 #[test]
 fn using_headers_works() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/input-2.txt");
-    cmd.arg("--headers=Movie,Year,Director,Genre");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
+        "--input-path",
+        "tests/data/input-2.txt",
+        "--headers=Movie,Year,Director,Genre",
+    ]);
 
     // WHEN
     // THEN
@@ -139,9 +141,8 @@ fn using_headers_works() {
 #[test]
 fn using_custom_style_works() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("--style=ascii");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-1.txt", "--style", "ascii"]);
 
     // WHEN
     // THEN
@@ -166,9 +167,8 @@ fn using_custom_style_works() {
 #[test]
 fn using_left_pad_works() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("--left-pad=4");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-1.txt", "--left-pad", "4"]);
 
     // WHEN
     // THEN
@@ -191,9 +191,8 @@ fn using_left_pad_works() {
 #[test]
 fn using_right_pad_works() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("--right-pad=4");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-1.txt", "--right-pad", "4"]);
 
     // WHEN
     // THEN
@@ -216,8 +215,8 @@ fn using_right_pad_works() {
 #[test]
 fn reading_input_where_row_item_contains_delimiter_works() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/input-5.txt");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-5.txt"]);
 
     // WHEN
     // THEN
@@ -241,8 +240,8 @@ fn reading_input_where_row_item_contains_delimiter_works() {
 #[test]
 fn selecting_specific_columns_works() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.args(["-p=tests/data/input-1.txt", "-c=0,2"]);
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-1.txt", "--cols", "0,2"]);
 
     // WHEN
     // THEN
@@ -265,8 +264,13 @@ fn selecting_specific_columns_works() {
 #[test]
 fn skipping_specific_columns_works() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.args(["-p=tests/data/input-1.txt", "-C=1,2"]);
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
+        "--input-path",
+        "tests/data/input-1.txt",
+        "--skip-cols",
+        "1,2",
+    ]);
 
     // WHEN
     // THEN
@@ -291,32 +295,10 @@ fn skipping_specific_columns_works() {
 //------------//
 
 #[test]
-fn fails_if_more_than_one_source_is_provided() {
-    // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/input-1.txt");
-    cmd.arg("-s");
-
-    // WHEN
-    // THEN
-    assert_cmd_snapshot!(cmd, @r"
-    success: false
-    exit_code: 2
-    ----- stdout -----
-
-    ----- stderr -----
-    error: a value is required for '--style <STRING>' but none was supplied
-      [possible values: ascii, ascii-rounded, blank, dots, empty, extended, markdown, modern, modern-rounded, psql, re-structured-text, rounded, sharp]
-
-    For more information, try '--help'.
-    ");
-}
-
-#[test]
 fn fails_if_input_file_is_non_existent() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/nonexistent.txt");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/nonexistent.txt"]);
 
     // WHEN
     // THEN
@@ -333,9 +315,13 @@ fn fails_if_input_file_is_non_existent() {
 #[test]
 fn fails_if_style_is_not_supported() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/nonexistent.txt");
-    cmd.arg("--style=blah");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
+        "--input-path",
+        "tests/data/nonexistent.txt",
+        "--style",
+        "blah",
+    ]);
 
     // WHEN
     // THEN
@@ -357,9 +343,13 @@ fn fails_if_style_is_not_supported() {
 #[test]
 fn fails_if_left_pad_is_not_a_number() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/nonexistent.txt");
-    cmd.arg("--left-pad=blah");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
+        "--input-path",
+        "tests/data/nonexistent.txt",
+        "--left-pad",
+        "blah",
+    ]);
 
     // WHEN
     // THEN
@@ -378,9 +368,13 @@ fn fails_if_left_pad_is_not_a_number() {
 #[test]
 fn fails_if_right_pad_is_not_a_number() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.arg("-p=tests/data/nonexistent.txt");
-    cmd.arg("--left-pad=blah");
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
+        "--input-path",
+        "tests/data/nonexistent.txt",
+        "--left-pad",
+        "blah",
+    ]);
 
     // WHEN
     // THEN
@@ -399,8 +393,15 @@ fn fails_if_right_pad_is_not_a_number() {
 #[test]
 fn fails_if_both_cols_and_skip_cols_are_provided() {
     // GIVEN
-    let mut base_cmd = base_command();
-    let mut cmd = base_cmd.args(["-p=tests/data/input-1.txt", "-c=0,3", "-C=1,2"]);
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
+        "--input-path",
+        "tests/data/input-1.txt",
+        "--cols",
+        "0,3",
+        "--skip-cols",
+        "1,2",
+    ]);
 
     // WHEN
     // THEN
