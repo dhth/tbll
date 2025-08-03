@@ -55,6 +55,9 @@ struct Args {
     #[arg(short = 'r', long = "right-pad", value_name = "NUMBER")]
     #[clap(default_value = "1")]
     right_pad: usize,
+    /// Trim whitespace from cells
+    #[arg(short = 't', long = "trim")]
+    trim: bool,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -76,7 +79,13 @@ fn main() -> anyhow::Result<()> {
         data.push(StringRecord::from(
             headers_vec
                 .into_iter()
-                .map(|s| s.trim().to_string())
+                .map(|s| {
+                    if args.trim {
+                        s.trim().to_string()
+                    } else {
+                        s.to_string()
+                    }
+                })
                 .collect::<Vec<String>>(),
         ));
     }
@@ -90,7 +99,11 @@ fn main() -> anyhow::Result<()> {
 
             for result in reader.records() {
                 let record = result.context("couldn't read row from stdin")?;
-                data.push(record);
+                if args.trim {
+                    data.push(get_trimmed_record(record));
+                } else {
+                    data.push(record);
+                }
             }
         }
         Some(path) => {
@@ -104,7 +117,11 @@ fn main() -> anyhow::Result<()> {
 
             for result in reader.records() {
                 let record = result.context("couldn't read row in file")?;
-                data.push(record);
+                if args.trim {
+                    data.push(get_trimmed_record(record));
+                } else {
+                    data.push(record);
+                }
             }
         }
     };
@@ -124,4 +141,13 @@ fn main() -> anyhow::Result<()> {
     }
 
     Ok(())
+}
+
+fn get_trimmed_record(record: StringRecord) -> StringRecord {
+    StringRecord::from(
+        record
+            .iter()
+            .map(|s| s.trim().to_string())
+            .collect::<Vec<String>>(),
+    )
 }

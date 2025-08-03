@@ -32,6 +32,7 @@ fn shows_help() {
       -s, --style <STRING>                Border Style [default: sharp] [possible values: ascii, ascii-rounded, blank, dots, empty, extended, markdown, modern, modern-rounded, psql, re-structured-text, rounded, sharp]
       -l, --left-pad <NUMBER>             Left padding for cells [default: 1]
       -r, --right-pad <NUMBER>            Right padding for cells [default: 1]
+      -t, --trim                          Trim whitespace from cells
       -h, --help                          Print help
 
     ----- stderr -----
@@ -285,6 +286,88 @@ fn skipping_specific_columns_works() {
     │ Pulp Fiction             │ Crime           │
     │ The Shawshank Redemption │ Drama           │
     └──────────────────────────┴─────────────────┘
+
+    ----- stderr -----
+    ");
+}
+
+#[test]
+fn trimming_whitespace_works() {
+    // GIVEN
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
+        "--input-path",
+        "tests/data/input-with-whitespace.txt",
+        "--trim",
+    ]);
+
+    // WHEN
+    // THEN
+    assert_cmd_snapshot!(cmd, @r"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    ┌──────────────────────────┬──────┬────────────────────────┬─────────────────┐
+    │ Movie                    │ Year │ Director               │ Genre           │
+    ├──────────────────────────┼──────┼────────────────────────┼─────────────────┤
+    │ The Matrix               │ 1999 │ Lana & Lilly Wachowski │ Science Fiction │
+    │ Pulp Fiction             │ 1994 │ Quentin Tarantino      │ Crime           │
+    │ The Shawshank Redemption │ 1994 │ Frank Darabont         │ Drama           │
+    └──────────────────────────┴──────┴────────────────────────┴─────────────────┘
+
+    ----- stderr -----
+    ");
+}
+
+#[test]
+fn doesnt_trim_whitespace_by_default() {
+    // GIVEN
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd(["--input-path", "tests/data/input-with-whitespace.txt"]);
+
+    // WHEN
+    // THEN
+    assert_cmd_snapshot!(cmd, @r"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    ┌──────────────────────────────┬──────────┬────────────────────────────┬─────────────────────┐
+    │   Movie                      │   Year   │   Director                 │   Genre             │
+    ├──────────────────────────────┼──────────┼────────────────────────────┼─────────────────────┤
+    │   The Matrix                 │   1999   │   Lana & Lilly Wachowski   │   Science Fiction   │
+    │   Pulp Fiction               │   1994   │   Quentin Tarantino        │   Crime             │
+    │   The Shawshank Redemption   │   1994   │   Frank Darabont           │   Drama             │
+    └──────────────────────────────┴──────────┴────────────────────────────┴─────────────────────┘
+
+    ----- stderr -----
+    ");
+}
+
+#[test]
+fn trimming_applies_to_custom_headers_as_well() {
+    // GIVEN
+    let fx = Fixture::new();
+    let mut cmd = fx.cmd([
+        "--input-path",
+        "tests/data/input-2.txt",
+        "--headers",
+        "  Movie  ,  Year  ,  Director  ,  Genre  ",
+        "--trim",
+    ]);
+
+    // WHEN
+    // THEN
+    assert_cmd_snapshot!(cmd, @r"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+    ┌──────────────────────────┬──────┬────────────────────────┬─────────────────┐
+    │ Movie                    │ Year │ Director               │ Genre           │
+    ├──────────────────────────┼──────┼────────────────────────┼─────────────────┤
+    │ The Matrix               │ 1999 │ Lana & Lilly Wachowski │ Science Fiction │
+    │ Pulp Fiction             │ 1994 │ Quentin Tarantino      │ Crime           │
+    │ The Shawshank Redemption │ 1994 │ Frank Darabont         │ Drama           │
+    └──────────────────────────┴──────┴────────────────────────┴─────────────────┘
 
     ----- stderr -----
     ");
