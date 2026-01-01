@@ -27,7 +27,7 @@ csv = "1.4.0"
 tabled = "0.20.0"
 
 [dev-dependencies]
-insta = "1.44.3"
+insta = "1.45.1"
 insta-cmd = "0.6.0"
 
 [profile.dev.package]
