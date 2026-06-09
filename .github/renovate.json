@@ -1,0 +1,8 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>dhth/deps//renovate/presets/default",
+    "local>dhth/deps//renovate/presets/rust",
+    "local>dhth/deps//renovate/presets/gh-actions"
+  ]
+}
